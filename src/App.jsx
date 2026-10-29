@@ -1,0 +1,208 @@
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
+import ItemCard from './components/ItemCard.jsx'
+import Navbar from './components/Navbar.jsx'
+import OrderPanel from './components/OrderPanel.jsx'
+import ProductList from './components/ProductList.jsx'
+import Toast from './components/Toast.jsx'
+import { items } from './data/items.js'
+import { matchesItem } from './utils/search.js'
+import { sendOrder } from './utils/sendOrder.js'
+
+const productsByCode = Object.fromEntries(
+  items.flatMap((item) =>
+    item.products.map((product) => [product.code, { ...product, itemName: item.name }]),
+  ),
+)
+
+function App() {
+  const [search, setSearch] = useState('')
+  // Po obnovení stránky se otevřená položka vrátí z historie prohlížeče.
+  const [selectedId, setSelectedId] = useState(() => window.history.state?.id ?? null)
+  // draft = množství nastavená v seznamu produktů, order = hotová objednávka (kód → ks)
+  const [draft, setDraft] = useState({})
+  const [order, setOrder] = useState({})
+  const [orderOpen, setOrderOpen] = useState(false)
+  // stav odeslání objednávky: idle | sending | sent | error
+  const [sendStatus, setSendStatus] = useState('idle')
+  const [notice, setNotice] = useState(null)
+  // Po otevření přehledu karty naskakují postupně jedna po druhé, při dalším scrollování už bez zpoždění.
+  const [intro, setIntro] = useState(true)
+
+  useEffect(() => {
+    if (!intro) return
+    const timer = setTimeout(() => setIntro(false), 1800)
+    return () => clearTimeout(timer)
+  }, [intro])
+
+  // Navigace přes History API: otevření položky nebo panelu objednávky přidá záznam
+  // do historie, takže tlačítko Zpět v telefonu vrátí o krok v aplikaci
+  // a nevyskočí rovnou z celé stránky.
+  useEffect(() => {
+    // Po obnovení stránky je panel zavřený, ale záznam v historii by mohl říkat opak.
+    const state = window.history.state
+    if (state?.order) window.history.replaceState({ ...state, order: false }, '')
+
+    const onPopState = (e) => {
+      const next = e.state ?? { id: null, order: false }
+      if (next.id == null) setIntro(true)
+      setSelectedId(next.id ?? null)
+      setOrderOpen(Boolean(next.order))
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  const navigate = (next) => {
+    window.history.pushState(next, '')
+    setSelectedId(next.id)
+    setOrderOpen(next.order)
+  }
+
+  const openItem = (id) => {
+    navigate({ id, order: false })
+    window.scrollTo(0, 0)
+  }
+
+  const openOrder = () => navigate({ id: selectedId, order: true })
+
+  const closeOrder = () => {
+    if (window.history.state?.order) window.history.back()
+    else setOrderOpen(false)
+  }
+
+  const showOverview = () => {
+    if (window.history.state?.id != null) {
+      window.history.back()
+    } else {
+      setIntro(true)
+      setSelectedId(null)
+    }
+  }
+
+  const visibleItems = items.filter((item) => matchesItem(item, search))
+
+  // Při psaní do hledání se vrátíme na přehled položek, ať jsou vidět výsledky.
+  const changeSearch = (value) => {
+    setSearch(value)
+    if (value && selectedId !== null) showOverview()
+  }
+  const selectedItem = items.find((item) => item.id === selectedId)
+
+  const orderLines = Object.entries(order).map(([code, qty]) => ({
+    ...productsByCode[code],
+    qty,
+  }))
+  const orderCount = orderLines.reduce((sum, line) => sum + line.qty, 0)
+
+  const changeDraft = (code, qty) =>
+    setDraft((prev) => ({ ...prev, [code]: qty }))
+
+  const handleSend = async () => {
+    setSendStatus('sending')
+    try {
+      const method = await sendOrder(orderLines)
+      // Přes EmailJS odešlo hned, přes mailto: musí uživatel e-mail odeslat sám.
+      if (method === 'emailjs') {
+        setOrder({})
+        setSendStatus('sent')
+      } else {
+        setSendStatus('idle')
+      }
+    } catch {
+      setSendStatus('error')
+    }
+  }
+
+  const addToOrder = () => {
+    setSendStatus('idle')
+    const added = Object.entries(draft)
+      .filter(([, qty]) => qty > 0)
+      .map(([code, qty]) => ({ ...productsByCode[code], qty }))
+    if (added.length === 0) return
+
+    setNotice({ id: Date.now(), lines: added })
+    setOrder((prev) => {
+      const next = { ...prev }
+      for (const [code, qty] of Object.entries(draft)) {
+        if (qty > 0) next[code] = (next[code] ?? 0) + qty
+      }
+      return next
+    })
+    setDraft({})
+  }
+
+  const changeOrderQuantity = (code, qty) =>
+    setOrder((prev) => {
+      const { [code]: _removed, ...rest } = prev
+      return qty > 0 ? { ...rest, [code]: qty } : rest
+    })
+
+  return (
+    <div className="min-h-screen">
+      <Navbar
+        search={search}
+        onSearchChange={changeSearch}
+        orderCount={orderCount}
+        onCartClick={openOrder}
+      />
+
+      <main className="mx-auto max-w-6xl px-4 py-8">
+        {selectedItem ? (
+          <ProductList
+            item={selectedItem}
+            draft={draft}
+            ordered={order}
+            onDraftChange={changeDraft}
+            onAddToOrder={addToOrder}
+            onBack={showOverview}
+          />
+        ) : (
+          <>
+            <h2 className="mb-5 flex items-center gap-3 font-display text-2xl font-bold tracking-wide">
+              <span className="h-7 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
+              <span className="bg-linear-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+                Položky
+              </span>
+              <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 font-sans text-sm font-semibold text-emerald-400">
+                {visibleItems.length}
+              </span>
+            </h2>
+            {visibleItems.length === 0 ? (
+              <p className="text-slate-400">Nic nenalezeno.</p>
+            ) : (
+              <ul className="grid grid-cols-[repeat(auto-fill,minmax(max(16rem,calc((100%-1.5rem)/3)),1fr))] gap-3">
+                {visibleItems.map((item, index) => (
+                  <motion.li
+                    key={item.id}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.7, ease: "easeOut", delay: intro ? index * 0.06 : 0 }}
+                    className="@container"
+                  >
+                    <ItemCard item={item} onSelect={openItem} />
+                  </motion.li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+      </main>
+
+      <Toast notice={notice} onClose={() => setNotice(null)} />
+
+      <OrderPanel
+        open={orderOpen}
+        lines={orderLines}
+        onClose={closeOrder}
+        onQuantityChange={changeOrderQuantity}
+        onClear={() => setOrder({})}
+        onSend={handleSend}
+        status={sendStatus}
+      />
+    </div>
+  )
+}
+
+export default App
