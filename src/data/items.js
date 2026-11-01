@@ -1,5 +1,6 @@
 // Položky sestavy Roto NT – Otevíravě sklopné kování K / A, základní bezpečnost.
 // `id` je pořadové číslo položky (1–18), produkty se doplní postupně.
+// `infoImage` = obrázek nápovědy, který se rozbalí pod názvem položky (ikona info), `infoTexts` = texty, které se na něm střídavě píšou.
 // Varianty (např. K / A) se uvádějí až u produktu.
 // `productName` = jednotné číslo názvu, které je v názvu produktu (když se liší od `name`).
 // Produkt: `code` = objednací číslo (unikátní), `group` = nadpis tabulky v katalogu,
@@ -11,6 +12,8 @@ export const items = [
     id: 1,
     name: 'OS převody',
     productName: 'OS převod',
+    infoImage: '/kovani/os-prevod-dark.webp',
+    infoTexts: ['OS převody od 280 mm do 2400 mm', 'Klika od 120 mm do 1000 mm'],
     products: [
       { code: '376456', group: osPrevodKonstantni, ffh: '280 – 480', length: 370, handleHeight: 120, lockPoints: '' },
       { code: '259830', group: osPrevodKonstantni, ffh: '481 – 600', length: 490, handleHeight: 170, lockPoints: '' },

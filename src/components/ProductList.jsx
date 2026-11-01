@@ -1,3 +1,7 @@
+import { AnimatePresence, motion } from 'motion/react'
+import { Info } from 'lucide-react'
+import { useState } from 'react'
+import TypedText from './TypedText.jsx'
 import { defaultTheme } from '../theme.js'
 import { productSubtitle, productTitle } from '../utils/productTitle.js'
 import QuantityControl from './QuantityControl.jsx'
@@ -6,6 +10,7 @@ const rowGrid = 'grid-cols-[1fr_auto] px-2.5 py-2 sm:px-3'
 
 function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme = defaultTheme }) {
   const groups = [...new Set(item.products.map((p) => p.group))]
+  const [infoOpen, setInfoOpen] = useState(false)
   const draftCount = Object.values(draft).reduce((sum, qty) => sum + qty, 0)
 
   return (
@@ -17,13 +22,60 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
         {/* Písmo se zmenší podle délky názvu a šířky obrazovky (Fira Code má znak široký ~0,6 em), ať se název vejde na jeden řádek. */}
         <span
           style={{
-            fontSize: `clamp(0.8rem, calc((100cqw - 3rem) / ${item.name.length * 0.62}), 1.25rem)`,
+            fontSize: `clamp(0.8rem, calc((100cqw - ${item.infoImage ? '5.75rem' : '3rem'}) / ${item.name.length * 0.62}), 1.25rem)`,
           }}
           className="min-w-0"
         >
           {item.name}
         </span>
+        {item.infoImage && (
+          <button
+            type="button"
+            onClick={() => setInfoOpen((open) => !open)}
+            aria-expanded={infoOpen}
+            aria-controls="item-info"
+            aria-label={infoOpen ? 'Skrýt nápovědu' : 'Zobrazit nápovědu'}
+            className={`ml-auto flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 ${theme.count} ${theme.ring} ${infoOpen ? 'bg-slate-800' : ''}`}
+          >
+            <Info className="size-5" aria-hidden="true" />
+          </button>
+        )}
       </h2>
+
+      {/* Nápověda se rozbalí pod názvem jako akordeon. */}
+      <AnimatePresence initial={false}>
+        {infoOpen && item.infoImage && (
+          <motion.div
+            id="item-info"
+            key="info"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            {/* Odsazení je uvnitř (padding), ne jako margin: margin se s výškou neanimuje a při zavírání by skočil. */}
+            <div className="pb-5">
+            <div className="relative">
+              <img
+                src={item.infoImage}
+                alt={`Nápověda: ${item.name}`}
+                loading="lazy"
+                className="aspect-[2.4/1] w-full rounded-xl border border-slate-800 object-cover object-[50%_43%]"
+              />
+              {item.infoTexts && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-[12%] flex justify-center">
+                  <TypedText
+                    texts={item.infoTexts}
+                    className={`font-display text-[clamp(0.55rem,2.6vw,0.8rem)] font-normal ${theme.count}`}
+                  />
+                </div>
+              )}
+            </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {item.products.length === 0 && (
         <p className="text-slate-400">Zatím bez produktů.</p>
