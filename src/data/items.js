@@ -1,14 +1,16 @@
 // Položky sestavy Roto NT – Otevíravě sklopné kování K / A, základní bezpečnost.
 // `id` je pořadové číslo položky (1–17), produkty se doplní postupně.
 // Varianty (např. K / A) se uvádějí až u produktu.
+// `productName` = jednotné číslo názvu, které je v názvu produktu (když se liší od `name`).
 // Produkt: `code` = objednací číslo (unikátní), `group` = nadpis tabulky v katalogu,
 // `lockPoints` = závěrové body (prázdné, pokud nejsou), `note` = poznámky pod čarou z katalogu.
-const osPrevodKonstantni = 'OS převod konstantní, dorn 15 mm'
+const osPrevodKonstantni = 'OS převody konstantní, dorn 15 mm'
 
 export const items = [
   {
     id: 1,
-    name: 'OS převod',
+    name: 'OS převody',
+    productName: 'OS převod',
     products: [
       { code: '376 456', group: osPrevodKonstantni, ffh: '280 – 480', length: 370, handleHeight: 120, lockPoints: '' },
       { code: '284 314', group: osPrevodKonstantni, ffh: '280 – 480', length: 370, handleHeight: 120, lockPoints: '' },
@@ -59,4 +61,11 @@ export const items = [
   { id: 15, name: 'Západka', products: [] },
   { id: 16, name: 'Druhé nůžky', products: [] },
   { id: 17, name: 'Podložka (profilově závislá)', products: [] },
+]
+
+// Hlavní kategorie na úvodní stránce. Zatím má položky jen okenní kování.
+export const categories = [
+  { id: 'okenni', name: 'Okenní kování', items },
+  { id: 'dverni', name: 'Dveřní kování', items: [] },
+  { id: 'prislusenstvi', name: 'Příslušenství', items: [] },
 ]

@@ -1,4 +1,5 @@
-import { productTitle } from '../utils/productTitle.js'
+import { productSubtitle, productTitle } from '../utils/productTitle.js'
+import BackButton from './BackButton.jsx'
 import QuantityControl from './QuantityControl.jsx'
 
 const rowGrid = 'grid-cols-[1fr_auto] px-2.5 py-2 sm:px-3'
@@ -9,27 +10,7 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, onBack
 
   return (
     <div className="animate-fade-up">
-      <div className="mb-4 flex justify-end">
-        <button
-          type="button"
-          onClick={onBack}
-          className="group inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 py-1.5 pl-3 pr-4 text-sm font-semibold text-emerald-400 transition duration-300 hover:border-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-[0_0_16px_rgba(16,185,129,0.25)] active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="size-4 transition-transform duration-300 ease-out group-hover:-translate-x-1"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M19 12H5M11 6l-6 6 6 6" />
-          </svg>
-          Zpět na položky
-        </button>
-      </div>
+      <BackButton onClick={onBack}>Zpět na položky</BackButton>
 
       <h2 className="mb-5 flex items-center gap-3 font-display text-xl font-bold text-slate-100">
         <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-sm font-semibold text-white">
@@ -61,10 +42,13 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, onBack
                   >
                     <span>
                       <span className="block text-[clamp(0.6rem,2.9vw,0.9rem)] font-semibold leading-tight text-slate-100 sm:text-base">
-                        {productTitle(p)}
+                        {productTitle(p, item.productName ?? item.name)}
                         {p.note && <sup className="ml-1 text-slate-400">{p.note}</sup>}
                       </span>
                       <span className="block font-display text-xs font-semibold text-lime-400 sm:text-sm">
+                        {productSubtitle(p) && (
+                          <span className="mr-2 font-sans font-normal text-slate-400">{productSubtitle(p)}</span>
+                        )}
                         {p.code}
                         {ordered[p.code] > 0 && (
                           <span className="ml-2 rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400">

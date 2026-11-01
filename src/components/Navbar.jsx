@@ -4,13 +4,20 @@ import Logo from './Logo.jsx'
 // Hamburger menu je zatím skryté, zapnout ho lze přepnutím na true.
 const SHOW_MENU = false
 
-function Navbar({ search, onSearchChange, orderCount, onCartClick }) {
+function Navbar({ search, onSearchChange, orderCount, onCartClick, onLogoClick }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
     <nav className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4">
-        <a href="/" className="flex shrink-0 items-center gap-2">
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault()
+            onLogoClick()
+          }}
+          className="flex shrink-0 items-center gap-2"
+        >
           <Logo />
         </a>
 

@@ -1,5 +1,5 @@
 import emailjs from '@emailjs/browser'
-import { productTitle } from './productTitle.js'
+import { productSubtitle, productTitle } from './productTitle.js'
 
 // Příjemce pro záložní odeslání přes `mailto:`. Při odesílání přes EmailJS se adresa
 // příjemce nastavuje přímo v šabloně na webu EmailJS.
@@ -28,8 +28,8 @@ function buildMessage(lines) {
     '',
     ...lines.flatMap((line, index) => [
       `${index + 1}. ${productTitle(line)}`,
+      ...(productSubtitle(line) ? [`   ${productSubtitle(line)}`] : []),
       `   Objednací číslo: ${line.code}`,
-      `   Položka: ${line.itemName}`,
       `   Množství: ${line.qty} ks`,
       '',
     ]),
@@ -55,7 +55,7 @@ function buildHtml(lines) {
           <tr>
             <td style="${td}${font}">
               <p style="margin:0;font-size:13px;line-height:18px;font-weight:bold;color:#0f172a;">${escapeHtml(productTitle(line))}</p>
-              <p style="margin:0;font-size:12px;line-height:18px;font-weight:bold;color:#059669;${mono}">${escapeHtml(line.code)}</p>
+              <p style="margin:0;font-size:12px;line-height:18px;font-weight:bold;color:#059669;${mono}">${productSubtitle(line) ? `<span style="font-weight:normal;color:#64748b;${font}">${escapeHtml(productSubtitle(line))}</span>&nbsp; ` : ''}${escapeHtml(line.code)}</p>
             </td>
             <td align="right" width="70" style="${td}${font}white-space:nowrap;font-size:14px;line-height:18px;font-weight:bold;color:#0f172a;">${line.qty}&nbsp;ks</td>
           </tr>`

@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
-import { productTitle } from '../utils/productTitle.js'
+import { productSubtitle, productTitle } from '../utils/productTitle.js'
 import QuantityControl from './QuantityControl.jsx'
 
 // Řádek objednávky: při otevření panelu naskočí, při odebrání zprůhlední a jeho výška
@@ -41,7 +41,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
     setTimeout(() => {
       setClosing(false)
       onClose()
-    }, 350)
+    }, 120)
   }
 
   useEffect(() => {
@@ -58,7 +58,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
     >
       <div
         onClick={onClose}
-        className={`absolute inset-0 bg-black/60 transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-black/60 transition-opacity duration-250 ${
           open ? 'opacity-100' : 'opacity-0'
         }`}
       />
@@ -66,7 +66,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
       <aside
         role="dialog"
         aria-label="Objednávka"
-        className={`absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-slate-800 bg-slate-950 shadow-2xl transition-transform duration-500 ease-in-out ${
+        className={`absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-slate-800 bg-slate-950 shadow-2xl transition-transform duration-250 ease-in-out ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -88,7 +88,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
               className={`size-5 transition duration-500 ease-in-out ${
                 open
                   ? closing
-                    ? 'rotate-180 scale-125 duration-300'
+                    ? 'rotate-180 scale-125 duration-100'
                     : 'rotate-0 delay-300'
                   : 'rotate-180 scale-50 opacity-0'
               }`}
@@ -122,8 +122,10 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
                       {productTitle(line)}
                     </p>
                     <p className="font-display text-xs font-semibold text-lime-400 sm:text-sm">
+                      {productSubtitle(line) && (
+                        <span className="mr-2 font-sans font-normal text-slate-400">{productSubtitle(line)}</span>
+                      )}
                       {line.code}
-                      <span className="font-sans font-normal text-slate-400"> · {line.itemName}</span>
                     </p>
                   </div>
                   <div className="col-span-2 row-start-2 sm:col-auto sm:row-auto">

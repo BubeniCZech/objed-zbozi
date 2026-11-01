@@ -1,23 +1,36 @@
 import { motion } from 'motion/react'
+import { AppWindow, DoorOpen, Puzzle } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import BackButton from './components/BackButton.jsx'
 import ItemCard from './components/ItemCard.jsx'
 import Navbar from './components/Navbar.jsx'
 import OrderPanel from './components/OrderPanel.jsx'
+import ParallaxBackground from './components/ParallaxBackground.jsx'
 import ProductList from './components/ProductList.jsx'
 import Toast from './components/Toast.jsx'
-import { items } from './data/items.js'
+import { categories } from './data/items.js'
 import { matchesItem } from './utils/search.js'
 import { sendOrder } from './utils/sendOrder.js'
 
+const categoryIcons = { okenni: AppWindow, dverni: DoorOpen, prislusenstvi: Puzzle }
+
+// Všechny položky ze všech kategorií, každá si pamatuje svou kategorii (kvůli hledání na úvodní stránce).
+const allItems = categories.flatMap((category) =>
+  category.items.map((item) => ({ ...item, categoryId: category.id })),
+)
+
 const productsByCode = Object.fromEntries(
-  items.flatMap((item) =>
-    item.products.map((product) => [product.code, { ...product, itemName: item.name }]),
+  allItems.flatMap((item) =>
+    item.products.map((product) => [product.code, { ...product, itemName: item.productName ?? item.name }]),
   ),
 )
 
+const HOME = { cat: null, id: null, order: false }
+
 function App() {
   const [search, setSearch] = useState('')
-  // Po obnovení stránky se otevřená položka vrátí z historie prohlížeče.
+  // Po obnovení stránky se otevřená kategorie a položka vrátí z historie prohlížeče.
+  const [categoryId, setCategoryId] = useState(() => window.history.state?.cat ?? null)
   const [selectedId, setSelectedId] = useState(() => window.history.state?.id ?? null)
   // draft = množství nastavená v seznamu produktů, order = hotová objednávka (kód → ks)
   const [draft, setDraft] = useState({})
@@ -44,8 +57,9 @@ function App() {
     if (state?.order) window.history.replaceState({ ...state, order: false }, '')
 
     const onPopState = (e) => {
-      const next = e.state ?? { id: null, order: false }
+      const next = e.state ?? HOME
       if (next.id == null) setIntro(true)
+      setCategoryId(next.cat ?? null)
       setSelectedId(next.id ?? null)
       setOrderOpen(Boolean(next.order))
     }
@@ -55,16 +69,23 @@ function App() {
 
   const navigate = (next) => {
     window.history.pushState(next, '')
+    setCategoryId(next.cat)
     setSelectedId(next.id)
     setOrderOpen(next.order)
   }
 
-  const openItem = (id) => {
-    navigate({ id, order: false })
+  const openCategory = (cat) => {
+    navigate({ cat, id: null, order: false })
     window.scrollTo(0, 0)
   }
 
-  const openOrder = () => navigate({ id: selectedId, order: true })
+  // `cat` se zadává při otevření z hledání na úvodní stránce, jinak platí aktuální kategorie.
+  const openItem = (id, cat = categoryId) => {
+    navigate({ cat, id, order: false })
+    window.scrollTo(0, 0)
+  }
+
+  const openOrder = () => navigate({ cat: categoryId, id: selectedId, order: true })
 
   const closeOrder = () => {
     if (window.history.state?.order) window.history.back()
@@ -80,14 +101,48 @@ function App() {
     }
   }
 
-  const visibleItems = items.filter((item) => matchesItem(item, search))
+  // Klik na logo: návrat na hlavní přehled a vymazání objednávky i rozpracovaných množství.
+  const goHome = () => {
+    setOrder({})
+    setDraft({})
+    setSearch('')
+    setSendStatus('idle')
+    setNotice(null)
+    if (window.history.state?.cat != null || window.history.state?.id != null) {
+      navigate(HOME)
+    } else {
+      setCategoryId(null)
+      setSelectedId(null)
+    }
+    setIntro(true)
+    window.scrollTo(0, 0)
+  }
+
+  const showHome = () => {
+    if (window.history.state?.cat != null) {
+      window.history.back()
+    } else {
+      setIntro(true)
+      setCategoryId(null)
+      setSelectedId(null)
+    }
+  }
+
+  const category = categories.find((c) => c.id === categoryId)
+  // Na úvodní stránce se při hledání prohledávají položky ze všech kategorií.
+  const searching = !category && search.trim() !== ''
+  const showCategories = !category && !searching
+  const entries = showCategories
+    ? categories
+    : (category ? category.items : allItems).filter((item) => matchesItem(item, search))
+  const heading = category ? category.name : searching ? 'Výsledky hledání' : 'Kategorie'
 
   // Při psaní do hledání se vrátíme na přehled položek, ať jsou vidět výsledky.
   const changeSearch = (value) => {
     setSearch(value)
     if (value && selectedId !== null) showOverview()
   }
-  const selectedItem = items.find((item) => item.id === selectedId)
+  const selectedItem = (category?.items ?? allItems).find((item) => item.id === selectedId)
 
   const orderLines = Object.entries(order).map(([code, qty]) => ({
     ...productsByCode[code],
@@ -140,11 +195,13 @@ function App() {
 
   return (
     <div className="min-h-screen">
+      <ParallaxBackground />
       <Navbar
         search={search}
         onSearchChange={changeSearch}
         orderCount={orderCount}
         onCartClick={openOrder}
+        onLogoClick={goHome}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-8">
@@ -159,31 +216,44 @@ function App() {
           />
         ) : (
           <>
+            {category && <BackButton onClick={showHome}>Zpět na kategorie</BackButton>}
             <h2 className="mb-5 flex items-center gap-3 font-display text-2xl font-bold tracking-wide">
               <span className="h-7 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
               <span className="bg-linear-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
-                Položky
+                {heading}
               </span>
               <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 font-sans text-sm font-semibold text-emerald-400">
-                {visibleItems.length}
+                {entries.length}
               </span>
             </h2>
-            {visibleItems.length === 0 ? (
+            {entries.length === 0 ? (
               <p className="text-slate-400">Nic nenalezeno.</p>
             ) : (
               <ul className="grid grid-cols-[repeat(auto-fill,minmax(max(16rem,calc((100%-1.5rem)/3)),1fr))] gap-3">
-                {visibleItems.map((item, index) => (
-                  <motion.li
-                    key={item.id}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.2 }}
-                    transition={{ duration: 0.7, ease: "easeOut", delay: intro ? index * 0.06 : 0 }}
-                    className="@container"
-                  >
-                    <ItemCard item={item} onSelect={openItem} />
-                  </motion.li>
-                ))}
+                {entries.map((entry, index) => {
+                  const Icon = categoryIcons[entry.id]
+                  return (
+                    <motion.li
+                      key={`${entry.categoryId ?? ''}${entry.id}`}
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, amount: 0.2 }}
+                      transition={{ duration: 0.7, ease: "easeOut", delay: intro ? index * 0.06 : 0 }}
+                      className="@container"
+                    >
+                      {showCategories ? (
+                        <ItemCard
+                          item={entry}
+                          badge={<Icon className="size-5" aria-hidden="true" />}
+                          count={entry.items.length}
+                          onSelect={openCategory}
+                        />
+                      ) : (
+                        <ItemCard item={entry} onSelect={(id) => openItem(id, entry.categoryId ?? categoryId)} />
+                      )}
+                    </motion.li>
+                  )
+                })}
               </ul>
             )}
           </>

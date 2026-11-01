@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { productTitle } from '../utils/productTitle.js'
+import { productSubtitle, productTitle } from '../utils/productTitle.js'
 
 const AUTO_CLOSE_MS = 3000
 
@@ -60,8 +60,10 @@ function Toast({ notice, onClose }) {
                 {productTitle(line)}
               </span>
               <span className="block font-display text-xs font-semibold text-lime-400">
+                {productSubtitle(line) && (
+                  <span className="mr-2 font-sans font-normal text-slate-400">{productSubtitle(line)}</span>
+                )}
                 {line.code}
-                <span className="font-sans font-normal text-slate-400"> · {line.itemName}</span>
               </span>
             </span>
             <span className="shrink-0 font-semibold text-slate-100">{line.qty} ks</span>
