@@ -1,10 +1,11 @@
 // Sdílená animace karet (kategorie, katalogy).
 // Stavy animace: "rest" (klid), "hover" (myš nad kartou) a "tap" (dotyk / stisk).
 // Dotyk funguje i na mobilu, na rozdíl od CSS :hover. Děti dědí název stavu od karty.
-export const makeCardVariants = (rgb) => {
+// `subtle` = jemnější rámeček a záře (decentní varianta).
+export const makeCardVariants = (rgb, subtle = false) => {
   const glow = {
-    borderColor: `rgba(${rgb}, 0.75)`,
-    boxShadow: `0 0 20px rgba(${rgb}, 0.25)`,
+    borderColor: `rgba(${rgb}, ${subtle ? 0.4 : 0.75})`,
+    boxShadow: `0 0 ${subtle ? 12 : 20}px rgba(${rgb}, ${subtle ? 0.1 : 0.25})`,
   }
   return {
     rest: {

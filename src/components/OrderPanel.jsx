@@ -31,6 +31,9 @@ const removeIconVariants = {
   exit: { rotate: 180, scale: 1.25, transition: { duration: 0.3 } },
 }
 
+// Ikona zavření se přehrává stejně dlouho jako při otevření, panel se zavře až po její většině.
+const CLOSE_MS = 400
+
 function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, onSend }) {
   const total = lines.reduce((sum, line) => sum + line.qty, 0)
   const [closing, setClosing] = useState(false)
@@ -41,7 +44,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
     setTimeout(() => {
       setClosing(false)
       onClose()
-    }, 120)
+    }, CLOSE_MS)
   }
 
   useEffect(() => {
@@ -88,7 +91,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
               className={`size-5 transition duration-500 ease-in-out ${
                 open
                   ? closing
-                    ? 'rotate-180 scale-125 duration-100'
+                    ? 'rotate-180 scale-50 opacity-0'
                     : 'rotate-0 delay-300'
                   : 'rotate-180 scale-50 opacity-0'
               }`}

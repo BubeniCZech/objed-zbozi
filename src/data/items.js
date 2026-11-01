@@ -72,10 +72,8 @@ export const items = [
       { code: '260280', group: 'Rohová vedení', name: 'Zvláštní rohové vedení, krátké' },
     ],
   },
-  { id: 4, name: 'Rohové vedení OS', products: [] },
-  { id: 5, name: 'Křídlové nůžky', products: [] },
   {
-    id: 6,
+    id: 4,
     name: 'Rohové vedení nůžek',
     infoImage: '/kovani/rohove-vedeni-nuzek.webp',
     // Obrázek na výšku: text se píše vlevo dole, mimo produkt (jinak je pod produktem uprostřed).
@@ -87,6 +85,25 @@ export const items = [
     ],
     products: [
       { code: '260286', group: 'Rohové vedení nůžek', name: 'Rohové vedení nůžek' },
+    ],
+  },
+  {
+    id: 5,
+    name: 'Křídlové nůžky',
+    infoImage: '/kovani/kridlove-nuzky.webp',
+    infoTexts: [
+      'Křídlové nůžky jsou součást otevíravě-sklopného kování, která drží horní část křídla při sklopení a vede ho při otevírání.',
+      'Připojují se k rámu v horním rohu a při sklopení umožňují, aby se křídlo nahoře odklonilo od rámu a zůstalo bezpečně zajištěné.',
+      'Při výběru je důležitá velikost podle šířky křídla, strana otevírání a typ kování od konkrétního výrobce, protože díly různých systémů nejsou zaměnitelné.',
+    ],
+    // Kód 787362 platí pro obě poslední řady výšky křídla (1201–1400 i 1401–1600 mm), proto jsou sloučené.
+    products: [
+      { code: '787345', group: 'Křídlové nůžky', name: 'Křídlové nůžky', subtitle: 'výška křídla 320 – 410 mm' },
+      { code: '787346', group: 'Křídlové nůžky', name: 'Křídlové nůžky', subtitle: 'výška křídla 411 – 600 mm' },
+      { code: '787347', group: 'Křídlové nůžky', name: 'Křídlové nůžky', subtitle: 'výška křídla 601 – 800 mm' },
+      { code: '787360', group: 'Křídlové nůžky', name: 'Křídlové nůžky', subtitle: 'výška křídla 801 – 1000 mm' },
+      { code: '787361', group: 'Křídlové nůžky', name: 'Křídlové nůžky', subtitle: 'výška křídla 1001 – 1200 mm' },
+      { code: '787362', group: 'Křídlové nůžky', name: 'Křídlové nůžky', subtitle: 'výška křídla 1201 – 1600 mm' },
     ],
   },
   { id: 7, name: 'Rámové nůžky', products: [] },

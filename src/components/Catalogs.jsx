@@ -3,8 +3,9 @@ import { ExternalLink, FileText } from 'lucide-react'
 import { makeBadgeVariants, makeCardVariants, shineVariants } from '../cardMotion.js'
 import { themes } from '../theme.js'
 
-// Stejná animace jako u karet kategorií, jen v oranžové barvě.
-const cardVariants = makeCardVariants(themes.katalogy.rgb)
+// Stejná animace jako u karet kategorií, jen v oranžové barvě a s decentnějším rámečkem.
+// Rámeček má světlejší oranžovou, stejnou jako ikona při najetí (badgeOn).
+const cardVariants = makeCardVariants('253, 186, 116', true)
 const badgeVariants = makeBadgeVariants(themes.katalogy)
 
 // Katalogy ke stažení. Soubory jsou v public/pdf, `size` je jen informativní údaj pro zobrazení.
@@ -52,7 +53,7 @@ function Catalogs() {
               whileHover="hover"
               whileTap="tap"
               transition={{ duration: 0.3 }}
-              className="group relative flex items-center gap-3 overflow-hidden rounded-xl border bg-slate-900/70 px-3 py-2.5 backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+              className="group relative flex items-center gap-3 overflow-hidden rounded-xl border bg-slate-900/70 px-3 py-2.5 backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50"
             >
               <motion.span
                 aria-hidden="true"

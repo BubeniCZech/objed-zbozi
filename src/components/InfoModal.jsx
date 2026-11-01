@@ -9,7 +9,7 @@ const MAX_ZOOM = 3
 const BUTTON_STEP = 1.5
 const DOUBLE_TAP_ZOOM = 2.5
 const DOUBLE_TAP_MS = 300
-const CLOSE_MS = 120
+const CLOSE_MS = 400
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y)
@@ -20,6 +20,8 @@ function InfoModal({ item, theme, onClose }) {
   const closeRef = useRef(null)
   const frameRef = useRef(null)
   const [closing, setClosing] = useState(false)
+  // Ikona zavření se po vykreslení přepne do zobrazeného stavu, aby se přechod přehrál i při otevření.
+  const [shown, setShown] = useState(false)
   // Přiblížení a posun obrázku: `s` = měřítko, `x` a `y` = posun v px od středu.
   const [view, setView] = useState({ s: 1, x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
@@ -35,6 +37,17 @@ function InfoModal({ item, theme, onClose }) {
   useEffect(() => {
     requestCloseRef.current = requestClose
   })
+
+  useEffect(() => {
+    let second
+    const first = requestAnimationFrame(() => {
+      second = requestAnimationFrame(() => setShown(true))
+    })
+    return () => {
+      cancelAnimationFrame(first)
+      cancelAnimationFrame(second)
+    }
+  }, [])
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -179,12 +192,16 @@ function InfoModal({ item, theme, onClose }) {
             aria-label="Zavřít nápovědu"
             className={`${iconButton} ${closing ? 'scale-90' : ''}`}
           >
-            <motion.svg
+            {/* Stejné animace jako u ikony zavření v panelu objednávky: při otevření se pootočí na místo, při zavření se stejně pomalu otočí zpět a zmizí. */}
+            <svg
               viewBox="0 0 24 24"
-              className="size-5"
-              initial={{ rotate: 180, scale: 0.5, opacity: 0 }}
-              animate={closing ? { rotate: 180, scale: 1.25 } : { rotate: 0, scale: 1, opacity: 1 }}
-              transition={closing ? { duration: 0.1 } : { duration: 0.5, ease: 'easeInOut', delay: 0.15 }}
+              className={`size-5 transition duration-500 ease-in-out ${
+                shown
+                  ? closing
+                    ? 'rotate-180 scale-50 opacity-0'
+                    : 'rotate-0 delay-300'
+                  : 'rotate-180 scale-50 opacity-0'
+              }`}
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -192,7 +209,7 @@ function InfoModal({ item, theme, onClose }) {
               aria-hidden="true"
             >
               <path d="M6 6l12 12M18 6L6 18" />
-            </motion.svg>
+            </svg>
           </button>
         </div>
 
