@@ -11,8 +11,73 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      /* Úvodní obrazovka: je v HTML, takže se zobrazí hned při spuštění, ještě před načtením aplikace. */
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+        background: #020617;
+        transition: opacity 0.45s ease;
+      }
+      #splash.hide { opacity: 0; pointer-events: none; }
+      #splash svg { width: 5rem; height: 5rem; }
+      #splash rect { fill: #047857; animation: splash-pane 2.4s ease-in-out infinite; }
+      #splash p {
+        margin: 0;
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 0.9rem;
+        letter-spacing: 0.08em;
+        color: #34d399;
+        /* Jméno se po písmenech odkrývá zleva doprava (9 písmen = 9 kroků) až po popisku. */
+        animation: splash-type 0.8s steps(9, end) 0.8s both;
+      }
+      #splash .dev {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      #splash .role {
+        font-family: "Fira Code", ui-monospace, monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        color: #64748b;
+        /* Popisek se odkrývá jako první (7 písmen = 7 kroků). */
+        animation: splash-type 0.45s steps(7, end) 0.3s both;
+      }
+      @keyframes splash-type {
+        from { clip-path: inset(0 100% 0 0); }
+        to { clip-path: inset(0 0 0 0); }
+      }
+      @keyframes splash-pane {
+        0%, 50%, 100% { fill: #047857; }
+        20% { fill: #6ee7b7; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #splash rect { animation: none; fill: #10b981; }
+        #splash p, #splash .role { animation: none; }
+      }
+    </style>
   </head>
-  <body>
+  <body style="background:#020617">
+    <div id="splash" role="status" aria-label="Načítání">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="2" y="2" width="13" height="13" rx="1.5" style="animation-delay:0s" />
+        <rect x="17" y="2" width="13" height="13" rx="1.5" style="animation-delay:0.4s" />
+        <rect x="17" y="17" width="13" height="13" rx="1.5" style="animation-delay:0.8s" />
+        <rect x="2" y="17" width="13" height="13" rx="1.5" style="animation-delay:1.2s" />
+      </svg>
+      <div class="dev">
+        <span class="role">vývojář</span>
+        <p>vibeCoder</p>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
