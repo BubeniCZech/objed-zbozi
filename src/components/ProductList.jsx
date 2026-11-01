@@ -1,16 +1,17 @@
+import { defaultTheme } from '../theme.js'
 import { productSubtitle, productTitle } from '../utils/productTitle.js'
 import QuantityControl from './QuantityControl.jsx'
 
 const rowGrid = 'grid-cols-[1fr_auto] px-2.5 py-2 sm:px-3'
 
-function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder }) {
+function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme = defaultTheme }) {
   const groups = [...new Set(item.products.map((p) => p.group))]
   const draftCount = Object.values(draft).reduce((sum, qty) => sum + qty, 0)
 
   return (
     <div className="animate-fade-up @container">
       <h2 className="mb-5 flex items-center gap-3 font-display font-bold text-slate-100">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-sm font-semibold text-white">
+        <span className={`flex size-8 shrink-0 items-center justify-center text-sm font-semibold ${theme.count}`}>
           {item.id}
         </span>
         {/* Písmo se zmenší podle délky názvu a šířky obrazovky (Fira Code má znak široký ~0,6 em), ať se název vejde na jeden řádek. */}

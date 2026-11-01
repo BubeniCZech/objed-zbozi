@@ -40,4 +40,4 @@ export const themes = {
 }
 
 // Výchozí téma, když kategorie není známa (úvodní přehled).
-export const defaultTheme = themes.prislusenstvi
+export const defaultTheme = themes.okenni

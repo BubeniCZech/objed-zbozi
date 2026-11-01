@@ -222,6 +222,7 @@ function App() {
             />
             <ProductList
               item={selectedItem}
+              theme={headingTheme}
               draft={draft}
               ordered={order}
               onDraftChange={changeDraft}

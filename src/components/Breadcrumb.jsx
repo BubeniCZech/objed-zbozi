@@ -69,7 +69,7 @@ function Breadcrumb({ crumbs }) {
   const mask = `linear-gradient(to right, ${state.left ? 'transparent' : '#000'}, #000 ${FADE}, #000 calc(100% - ${FADE}), ${state.right ? 'transparent' : '#000'})`
 
   const arrowClass =
-    'flex size-6 shrink-0 items-center justify-center rounded text-emerald-400 hover:text-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500'
+    'flex size-6 shrink-0 items-center justify-center rounded text-sky-400 hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500'
 
   // Šipka drží své místo, jen se plynule zobrazí nebo schová, aby se seznam neposouval.
   const arrow = (side, visible, Icon, label, direction) => (
@@ -113,7 +113,7 @@ function Breadcrumb({ crumbs }) {
                 <button
                   type="button"
                   onClick={crumb.onClick}
-                  className="rounded px-1 font-medium text-emerald-500 transition-colors duration-200 hover:text-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  className="rounded px-1 font-medium text-sky-500 transition-colors duration-200 hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
                 >
                   {crumb.label}
                 </button>
