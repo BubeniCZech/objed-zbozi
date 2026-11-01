@@ -1,11 +1,13 @@
 import { useReducedMotion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
-const TYPE_MS = 55
-const HOLD_MS = 1800
+const TYPE_MS = 40
+// Doba, po kterou text zůstane po dopsání, roste s jeho délkou, aby se dlouhá věta stihla přečíst.
+const holdMs = (length) => 1500 + length * 25
 const FADE_MS = 450
 
-// Text, který se postupně píše po písmenech, chvíli zůstane, zmizí a začne se psát další v pořadí.
+// Text (věta), který se postupně píše po písmenech, po dopsání chvíli zůstane, zmizí a začne se psát další věta v pořadí.
+// Dlouhý text se zalomí na více řádků.
 function TypedText({ texts, className = '' }) {
   const reduced = useReducedMotion()
   const [index, setIndex] = useState(0)
@@ -26,7 +28,7 @@ function TypedText({ texts, className = '' }) {
     } else if (!done) {
       timer = setTimeout(() => setCount(reduced ? text.length : count + 1), reduced ? 0 : TYPE_MS)
     } else {
-      timer = setTimeout(() => setFading(true), HOLD_MS)
+      timer = setTimeout(() => setFading(true), holdMs(text.length))
     }
     return () => clearTimeout(timer)
   }, [fading, done, count, reduced, text.length, texts.length])
@@ -35,14 +37,14 @@ function TypedText({ texts, className = '' }) {
     <span
       aria-live="off"
       style={{ opacity: fading ? 0 : 1, transition: `opacity ${FADE_MS}ms ease` }}
-      className={`relative inline-block whitespace-nowrap ${className}`}
+      className={`relative inline-block max-w-full text-left ${className}`}
     >
-      {/* Neviditelný celý text drží šířku, aby se psaný text neposouval do stran. */}
+      {/* Neviditelný celý text drží velikost i zalomení řádků, aby se psaný text neposouval. */}
       <span className="invisible">{text}</span>
-      <span className="absolute left-0 top-0">
+      <span className="absolute left-0 top-0 w-full">
         {text.slice(0, count)}
         {!reduced && (
-          <span className="ml-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em] animate-pulse bg-current" aria-hidden="true" />
+          <span className="ml-0.5 inline-block h-[1em] w-0.5 translate-y-[0.15em] animate-pulse bg-current" aria-hidden="true" />
         )}
       </span>
     </span>

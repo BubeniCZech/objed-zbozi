@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence } from 'motion/react'
 import { Info } from 'lucide-react'
 import { useState } from 'react'
-import TypedText from './TypedText.jsx'
+import InfoModal from './InfoModal.jsx'
 import { defaultTheme } from '../theme.js'
 import { productSubtitle, productTitle } from '../utils/productTitle.js'
 import QuantityControl from './QuantityControl.jsx'
@@ -31,49 +31,19 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
         {item.infoImage && (
           <button
             type="button"
-            onClick={() => setInfoOpen((open) => !open)}
-            aria-expanded={infoOpen}
-            aria-controls="item-info"
-            aria-label={infoOpen ? 'Skrýt nápovědu' : 'Zobrazit nápovědu'}
-            className={`ml-auto flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 ${theme.count} ${theme.ring} ${infoOpen ? 'bg-slate-800' : ''}`}
+            onClick={() => setInfoOpen(true)}
+            aria-haspopup="dialog"
+            aria-label="Zobrazit nápovědu"
+            className={`ml-auto flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 ${theme.count} ${theme.ring}`}
           >
             <Info className="size-5" aria-hidden="true" />
           </button>
         )}
       </h2>
 
-      {/* Nápověda se rozbalí pod názvem jako akordeon. */}
-      <AnimatePresence initial={false}>
+      <AnimatePresence>
         {infoOpen && item.infoImage && (
-          <motion.div
-            id="item-info"
-            key="info"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            className="overflow-hidden"
-          >
-            {/* Odsazení je uvnitř (padding), ne jako margin: margin se s výškou neanimuje a při zavírání by skočil. */}
-            <div className="pb-5">
-            <div className="relative">
-              <img
-                src={item.infoImage}
-                alt={`Nápověda: ${item.name}`}
-                loading="lazy"
-                className="aspect-[2.4/1] w-full rounded-xl border border-slate-800 object-cover object-[50%_43%]"
-              />
-              {item.infoTexts && (
-                <div className="pointer-events-none absolute inset-x-0 bottom-[12%] flex justify-center">
-                  <TypedText
-                    texts={item.infoTexts}
-                    className={`font-display text-[clamp(0.55rem,2.6vw,0.8rem)] font-normal ${theme.count}`}
-                  />
-                </div>
-              )}
-            </div>
-            </div>
-          </motion.div>
+          <InfoModal item={item} theme={theme} onClose={() => setInfoOpen(false)} />
         )}
       </AnimatePresence>
 
@@ -95,7 +65,7 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
                     key={p.code}
                     style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}
                     className={`animate-fade-up grid items-center gap-x-3 border-t border-slate-800 first:border-t-0 ${rowGrid} ${
-                      draft[p.code] ? 'bg-emerald-500/10' : ''
+                      draft[p.code] ? theme.row : ''
                     }`}
                   >
                     <span>
@@ -109,7 +79,7 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
                         )}
                         {p.code}
                         {ordered[p.code] > 0 && (
-                          <span className="ml-2 rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400">
+                          <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-medium ${theme.tag}`}>
                             v objednávce: {ordered[p.code]}
                           </span>
                         )}
@@ -119,6 +89,7 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
                       <QuantityControl
                         value={draft[p.code] ?? 0}
                         onChange={(qty) => onDraftChange(p.code, qty)}
+                        theme={theme}
                       />
                     </span>
                   </li>
@@ -133,7 +104,7 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
           type="button"
           disabled={draftCount === 0}
           onClick={onAddToOrder}
-          className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-black/40 transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 disabled:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+          className={`rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-black/40 transition disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 disabled:shadow-none focus:outline-none focus-visible:ring-2 ${theme.confirm}`}
         >
           {draftCount === 0
             ? 'Potvrdit'

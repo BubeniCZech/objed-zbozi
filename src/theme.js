@@ -1,4 +1,5 @@
 // Barevná témata sekcí. Třídy jsou zapsané celé, aby je Tailwind našel při sestavení.
+// `qty*`, `row`, `tag` a `confirm` barví ovladač množství, řádky a tlačítko v seznamu produktů.
 // `rgb` se používá pro záři a rámeček karet, `badge` a `badgeOn` pro ikonu (klid / hover).
 export const themes = {
   prislusenstvi: {
@@ -9,6 +10,13 @@ export const themes = {
     gradient: 'from-emerald-400 via-emerald-600 to-emerald-400',
     count: 'text-emerald-400',
     ring: 'focus-visible:ring-emerald-500',
+    qtyButton: 'hover:bg-emerald-500/15 hover:text-emerald-300 active:bg-emerald-500/25 focus-visible:bg-emerald-500/15 focus-visible:text-emerald-300',
+    qtyActive: 'border-emerald-600/70 bg-emerald-500/10',
+    qtyFocus: 'focus-within:border-emerald-500 focus-within:ring-emerald-500/30',
+    qtyValue: 'text-emerald-300',
+    row: 'bg-emerald-500/10',
+    tag: 'bg-emerald-500/15 text-emerald-400',
+    confirm: 'bg-emerald-600 hover:bg-emerald-500 focus-visible:ring-emerald-300',
   },
   dverni: {
     rgb: '124, 58, 237',
@@ -18,6 +26,13 @@ export const themes = {
     gradient: 'from-violet-400 via-violet-600 to-violet-400',
     count: 'text-violet-400',
     ring: 'focus-visible:ring-violet-500',
+    qtyButton: 'hover:bg-violet-500/15 hover:text-violet-300 active:bg-violet-500/25 focus-visible:bg-violet-500/15 focus-visible:text-violet-300',
+    qtyActive: 'border-violet-600/70 bg-violet-500/10',
+    qtyFocus: 'focus-within:border-violet-500 focus-within:ring-violet-500/30',
+    qtyValue: 'text-violet-300',
+    row: 'bg-violet-500/10',
+    tag: 'bg-violet-500/15 text-violet-400',
+    confirm: 'bg-violet-600 hover:bg-violet-500 focus-visible:ring-violet-300',
   },
   okenni: {
     rgb: '2, 132, 199',
@@ -27,6 +42,13 @@ export const themes = {
     gradient: 'from-sky-400 via-sky-600 to-sky-400',
     count: 'text-sky-400',
     ring: 'focus-visible:ring-sky-500',
+    qtyButton: 'hover:bg-sky-500/15 hover:text-sky-300 active:bg-sky-500/25 focus-visible:bg-sky-500/15 focus-visible:text-sky-300',
+    qtyActive: 'border-sky-600/70 bg-sky-500/10',
+    qtyFocus: 'focus-within:border-sky-500 focus-within:ring-sky-500/30',
+    qtyValue: 'text-sky-300',
+    row: 'bg-sky-500/10',
+    tag: 'bg-sky-500/15 text-sky-400',
+    confirm: 'bg-sky-600 hover:bg-sky-500 focus-visible:ring-sky-300',
   },
   katalogy: {
     rgb: '234, 88, 12',
@@ -36,6 +58,13 @@ export const themes = {
     gradient: 'from-orange-400 via-orange-600 to-orange-400',
     count: 'text-orange-400',
     ring: 'focus-visible:ring-orange-500',
+    qtyButton: 'hover:bg-orange-500/15 hover:text-orange-300 active:bg-orange-500/25 focus-visible:bg-orange-500/15 focus-visible:text-orange-300',
+    qtyActive: 'border-orange-600/70 bg-orange-500/10',
+    qtyFocus: 'focus-within:border-orange-500 focus-within:ring-orange-500/30',
+    qtyValue: 'text-orange-300',
+    row: 'bg-orange-500/10',
+    tag: 'bg-orange-500/15 text-orange-400',
+    confirm: 'bg-orange-600 hover:bg-orange-500 focus-visible:ring-orange-300',
   },
 }
 

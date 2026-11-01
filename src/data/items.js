@@ -1,6 +1,6 @@
 // Položky sestavy Roto NT – Otevíravě sklopné kování K / A, základní bezpečnost.
 // `id` je pořadové číslo položky (1–18), produkty se doplní postupně.
-// `infoImage` = obrázek nápovědy, který se rozbalí pod názvem položky (ikona info), `infoTexts` = texty, které se na něm střídavě píšou.
+// `infoImage` = obrázek nápovědy, který se rozbalí pod názvem položky (ikona info), `infoTall` = obrázek na výšku (text vlevo dole), `infoTexts` = texty, které se na něm střídavě píšou.
 // Varianty (např. K / A) se uvádějí až u produktu.
 // `productName` = jednotné číslo názvu, které je v názvu produktu (když se liší od `name`).
 // Produkt: `code` = objednací číslo (unikátní), `group` = nadpis tabulky v katalogu,
@@ -13,7 +13,10 @@ export const items = [
     name: 'OS převody',
     productName: 'OS převod',
     infoImage: '/kovani/os-prevod-dark.webp',
-    infoTexts: ['OS převody od 280 mm do 2400 mm', 'Klika od 120 mm do 1000 mm'],
+    infoTexts: [
+      'OS převod je hlavní ovládací prvek kování otevíravě-sklopného okna.',
+      'Přenáší pohyb z kliky na uzamykací body po obvodu křídla, takže umožňuje okno zavřít, otevřít a sklopit.',
+    ],
     products: [
       { code: '376456', group: osPrevodKonstantni, ffh: '280 – 480', length: 370, handleHeight: 120, lockPoints: '' },
       { code: '259830', group: osPrevodKonstantni, ffh: '481 – 600', length: 490, handleHeight: 170, lockPoints: '' },
@@ -32,6 +35,12 @@ export const items = [
     id: 2,
     name: 'Štulpové převody',
     productName: 'Štulpový převod',
+    infoImage: '/kovani/stulpove-prevody.webp',
+    infoTexts: [
+      'Štulpový převod je dlouhá plochá lišta kování, která se zapouští do štulpové drážky po obvodu křídla.',
+      'Spojuje kliku s uzamykacími body, takže otočením kliky se okno zamkne, odemkne nebo sklopí.',
+      'Při výběru je důležitá délka podle výšky křídla, rozteč kliky a výrobce kování, protože díly různých systémů nejsou zaměnitelné.',
+    ],
     // Zatím stejné rozměry jako OS převody, `code` jsou zástupná čísla, která se nahradí skutečnými.
     products: [
       { code: 'STULP-01', group: 'Štulpové převody', ffh: '280 – 480', length: 370, handleHeight: 120, lockPoints: '' },
@@ -60,6 +69,14 @@ export const items = [
   {
     id: 6,
     name: 'Rohové vedení nůžek',
+    infoImage: '/kovani/rohove-vedeni-nuzek.webp',
+    // Obrázek na výšku: text se píše vlevo dole, mimo produkt (jinak je pod produktem uprostřed).
+    infoTall: true,
+    infoTexts: [
+      'Rohové vedení nůžek je součást kování, která vede pohyb z převodu přes roh křídla na horní vodorovnou stranu.',
+      'Umožňuje tak ovládat uzamykací body a nůžky i na horní hraně okna jedním pohybem kliky.',
+      'Při výběru je důležitá velikost podle šířky a výšky křídla, správná strana otevírání a typ kování od konkrétního výrobce, protože díly různých systémů nejsou zaměnitelné.',
+    ],
     products: [
       { code: '260286', group: 'Rohové vedení nůžek', name: 'Rohové vedení nůžek' },
     ],
