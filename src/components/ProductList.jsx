@@ -1,17 +1,14 @@
 import { productSubtitle, productTitle } from '../utils/productTitle.js'
-import BackButton from './BackButton.jsx'
 import QuantityControl from './QuantityControl.jsx'
 
 const rowGrid = 'grid-cols-[1fr_auto] px-2.5 py-2 sm:px-3'
 
-function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, onBack }) {
+function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder }) {
   const groups = [...new Set(item.products.map((p) => p.group))]
   const draftCount = Object.values(draft).reduce((sum, qty) => sum + qty, 0)
 
   return (
     <div className="animate-fade-up">
-      <BackButton onClick={onBack}>Zpět na položky</BackButton>
-
       <h2 className="mb-5 flex items-center gap-3 font-display text-xl font-bold text-slate-100">
         <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-sm font-semibold text-white">
           {item.id}

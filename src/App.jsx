@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import { AppWindow, DoorOpen, Puzzle } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import BackButton from './components/BackButton.jsx'
+import Breadcrumb from './components/Breadcrumb.jsx'
 import ItemCard from './components/ItemCard.jsx'
 import Navbar from './components/Navbar.jsx'
 import OrderPanel from './components/OrderPanel.jsx'
@@ -118,14 +118,11 @@ function App() {
     window.scrollTo(0, 0)
   }
 
+  // Odkaz „Kategorie“ v drobečkové navigaci: zpět na úvodní přehled z kterékoli úrovně.
   const showHome = () => {
-    if (window.history.state?.cat != null) {
-      window.history.back()
-    } else {
-      setIntro(true)
-      setCategoryId(null)
-      setSelectedId(null)
-    }
+    setIntro(true)
+    navigate(HOME)
+    window.scrollTo(0, 0)
   }
 
   const category = categories.find((c) => c.id === categoryId)
@@ -206,17 +203,27 @@ function App() {
 
       <main className="mx-auto max-w-6xl px-4 py-8">
         {selectedItem ? (
-          <ProductList
-            item={selectedItem}
-            draft={draft}
-            ordered={order}
-            onDraftChange={changeDraft}
-            onAddToOrder={addToOrder}
-            onBack={showOverview}
-          />
+          <>
+            <Breadcrumb
+              crumbs={[
+                { label: 'Kategorie', onClick: showHome },
+                { label: category.name, onClick: () => openCategory(category.id) },
+                { label: selectedItem.name },
+              ]}
+            />
+            <ProductList
+              item={selectedItem}
+              draft={draft}
+              ordered={order}
+              onDraftChange={changeDraft}
+              onAddToOrder={addToOrder}
+            />
+          </>
         ) : (
           <>
-            {category && <BackButton onClick={showHome}>Zpět na kategorie</BackButton>}
+            {category && (
+              <Breadcrumb crumbs={[{ label: 'Kategorie', onClick: showHome }, { label: category.name }]} />
+            )}
             <h2 className="mb-5 flex items-center gap-3 font-display text-2xl font-bold tracking-wide">
               <span className="h-7 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
               <span className="bg-linear-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
