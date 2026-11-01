@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom'
 import TypedText from './TypedText.jsx'
 
 const MIN_ZOOM = 1
-const MAX_ZOOM = 4
+const MAX_ZOOM = 3
 const BUTTON_STEP = 1.5
 const DOUBLE_TAP_ZOOM = 2.5
 const DOUBLE_TAP_MS = 300
@@ -134,7 +134,7 @@ function InfoModal({ item, theme, onClose }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       onClick={requestClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex touch-none items-center justify-center bg-slate-950/90 p-4"
     >
       <motion.div
         role="dialog"
@@ -209,7 +209,7 @@ function InfoModal({ item, theme, onClose }) {
               transform: `translate(${view.x}px, ${view.y}px) scale(${view.s})`,
               transition: dragging ? 'none' : 'transform 0.25s ease-out',
             }}
-            className="size-full"
+            className="size-full will-change-transform"
           >
             <img
               src={item.infoImage}
