@@ -86,12 +86,15 @@ function InfoModal({ item, theme, onClose }) {
     if (g.pointers.size === 2 && g.pinch) {
       const [a, b] = [...g.pointers.values()]
       g.moved = true
-      setView((v) => fit({ ...v, s: g.pinch.s * (distance(a, b) / g.pinch.dist) }))
+      // Hodnoty se čtou hned: až se provede aktualizace stavu, může být gesto už ukončené.
+      const s = g.pinch.s * (distance(a, b) / g.pinch.dist)
+      setView((v) => fit({ ...v, s }))
     } else if (g.pan) {
       const dx = e.clientX - g.pan.px
       const dy = e.clientY - g.pan.py
       if (Math.hypot(dx, dy) > 6) g.moved = true
-      if (view.s > 1) setView((v) => fit({ ...v, x: g.pan.x + dx, y: g.pan.y + dy }))
+      const { x, y } = g.pan
+      if (view.s > 1) setView((v) => fit({ ...v, x: x + dx, y: y + dy }))
     }
   }
 
