@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { AppWindow, DoorOpen, Puzzle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Breadcrumb from './components/Breadcrumb.jsx'
+import Catalogs from './components/Catalogs.jsx'
 import ItemCard from './components/ItemCard.jsx'
 import Navbar from './components/Navbar.jsx'
 import OrderPanel from './components/OrderPanel.jsx'
@@ -84,6 +85,8 @@ function App() {
 
   // `cat` se zadává při otevření z hledání na úvodní stránce, jinak platí aktuální kategorie.
   const openItem = (id, cat = categoryId) => {
+    // Po přechodu z výsledků hledání se vyhledávací pole vyprázdní.
+    setSearch('')
     navigate({ cat, id, order: false })
     window.scrollTo(0, 0)
   }
@@ -266,6 +269,7 @@ function App() {
                 })}
               </ul>
             )}
+            {showCategories && <Catalogs />}
           </>
         )}
       </main>
