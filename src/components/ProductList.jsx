@@ -8,12 +8,20 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder }) {
   const draftCount = Object.values(draft).reduce((sum, qty) => sum + qty, 0)
 
   return (
-    <div className="animate-fade-up">
-      <h2 className="mb-5 flex items-center gap-3 font-display text-xl font-bold text-slate-100">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-sm font-semibold text-white">
+    <div className="animate-fade-up @container">
+      <h2 className="mb-5 flex items-center gap-3 font-display font-bold text-slate-100">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-sm font-semibold text-white">
           {item.id}
         </span>
-        {item.name}
+        {/* Písmo se zmenší podle délky názvu a šířky obrazovky (Fira Code má znak široký ~0,6 em), ať se název vejde na jeden řádek. */}
+        <span
+          style={{
+            fontSize: `clamp(0.8rem, calc((100cqw - 3rem) / ${item.name.length * 0.62}), 1.25rem)`,
+          }}
+          className="min-w-0"
+        >
+          {item.name}
+        </span>
       </h2>
 
       {item.products.length === 0 && (

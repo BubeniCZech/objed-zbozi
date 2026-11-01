@@ -12,6 +12,7 @@
   "dependencies": {
     "@emailjs/browser": "^5.0.3",
     "@tailwindcss/vite": "^4.3.3",
+    "@vercel/functions": "^3.10.5",
     "framer-motion": "^14.7.1",
     "lucide-react": "^1.64.0",
     "motion": "^14.7.1",
