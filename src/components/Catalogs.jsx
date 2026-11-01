@@ -1,5 +1,11 @@
 import { motion } from 'motion/react'
 import { ExternalLink, FileText } from 'lucide-react'
+import { makeBadgeVariants, makeCardVariants, shineVariants } from '../cardMotion.js'
+import { themes } from '../theme.js'
+
+// Stejná animace jako u karet kategorií, jen v oranžové barvě.
+const cardVariants = makeCardVariants(themes.katalogy.rgb)
+const badgeVariants = makeBadgeVariants(themes.katalogy)
 
 // Katalogy ke stažení. Soubory jsou v public/pdf, `size` je jen informativní údaj pro zobrazení.
 // `version` se zvýší pokaždé, když se soubor nahradí novým pod stejným názvem. Přidává se do odkazu,
@@ -23,7 +29,7 @@ function Catalogs() {
         id="catalogs-title"
         className="mb-4 flex items-center gap-3 font-display text-lg font-bold tracking-wide text-slate-300"
       >
-        <span className="h-5 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
+        <span className="h-5 w-1 rounded-full bg-orange-500" aria-hidden="true" />
         Katalogy kování
       </h3>
 
@@ -37,15 +43,29 @@ function Catalogs() {
             transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.1 }}
             className="@container"
           >
-            <a
+            <motion.a
               href={`${catalog.file}?v=${catalog.version}`}
               target="_blank"
               rel="noopener"
-              className="group flex items-center gap-4 rounded-xl border border-slate-800 bg-slate-900/70 p-4 backdrop-blur-sm transition-[border-color,box-shadow] duration-300 hover:border-emerald-600/75 hover:shadow-[0_0_20px_rgba(5,150,105,0.25)] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              variants={cardVariants}
+              initial="rest"
+              whileHover="hover"
+              whileTap="tap"
+              transition={{ duration: 0.3 }}
+              className="group relative flex items-center gap-3 overflow-hidden rounded-xl border bg-slate-900/70 px-3 py-2.5 backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
             >
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400 transition-colors duration-300 group-hover:text-emerald-300">
-                <FileText className="size-6" aria-hidden="true" />
-              </span>
+              <motion.span
+                aria-hidden="true"
+                variants={shineVariants}
+                style={{ skewX: -12 }}
+                className="pointer-events-none absolute -inset-y-2 left-0 w-1/4 bg-linear-to-r from-transparent via-white/15 to-transparent"
+              />
+              <motion.span
+                variants={badgeVariants}
+                className="relative flex size-8 shrink-0 items-center justify-center"
+              >
+                <FileText className="size-5" aria-hidden="true" />
+              </motion.span>
               <span className="min-w-0 flex-1">
                 <span
                   style={{ fontSize: fit(TITLE.length, '1rem') }}
@@ -61,10 +81,10 @@ function Catalogs() {
                 </span>
               </span>
               <ExternalLink
-                className="size-5 shrink-0 text-slate-600 transition-colors duration-300 group-hover:text-emerald-300"
+                className="size-5 shrink-0 text-slate-600 transition-colors duration-300 group-hover:text-orange-300"
                 aria-hidden="true"
               />
-            </a>
+            </motion.a>
           </motion.li>
         ))}
       </ul>

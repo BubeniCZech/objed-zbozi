@@ -1,28 +1,8 @@
 import { motion } from 'motion/react'
+import { useMemo } from 'react'
+import { defaultTheme } from '../theme.js'
+import { makeBadgeVariants, makeCardVariants, shineVariants } from '../cardMotion.js'
 
-// Stavy animace: "rest" (klid), "hover" (myš nad kartou) a "tap" (dotyk / stisk).
-// Dotyk funguje i na mobilu, na rozdíl od CSS :hover. Děti dědí název stavu od karty.
-const glow = {
-  borderColor: 'rgba(5, 150, 105, 0.75)',
-  boxShadow: '0 0 20px rgba(5, 150, 105, 0.25)',
-}
-
-const cardVariants = {
-  rest: {
-    scale: 1,
-    borderColor: 'rgba(30, 41, 59, 1)',
-    boxShadow: '0 0 0 rgba(16, 185, 129, 0)',
-  },
-  hover: { scale: 1.02, ...glow },
-  tap: { scale: 0.97, ...glow },
-}
-
-const shine = { x: '450%', transition: { duration: 0.7, ease: 'easeOut' } }
-const shineVariants = {
-  rest: { x: '-100%', transition: { duration: 0 } },
-  hover: shine,
-  tap: shine,
-}
 
 const imageVariants = {
   rest: { scale: 1 },
@@ -37,13 +17,6 @@ const overlayVariants = {
   tap: overlayOn,
 }
 
-// Ikona se při hoveru jen zesvětlí, stejně jako počet vpravo, bez pohybu a svitu.
-const badgeOn = { color: '#6ee7b7' }
-const badgeVariants = {
-  rest: { color: '#34d399' },
-  hover: badgeOn,
-  tap: badgeOn,
-}
 
 const countOn = { color: '#6ee7b7' }
 const countVariants = {
@@ -54,8 +27,10 @@ const countVariants = {
 
 // `badge` a `count` jdou přepsat (karty kategorií), jinak se bere číslo a počet produktů položky.
 // Když má položka `image`, zobrazí se vlevo jako náhled a popis s ikonou je vpravo.
-function ItemCard({ item, onSelect, badge = item.id, count = item.products.length }) {
+function ItemCard({ item, onSelect, badge = item.id, count = item.products.length, theme = defaultTheme }) {
   const hasImage = Boolean(item.image)
+  const cardVariants = useMemo(() => makeCardVariants(theme.rgb), [theme])
+  const badgeVariants = useMemo(() => makeBadgeVariants(theme), [theme])
 
   return (
     <motion.button
@@ -66,7 +41,7 @@ function ItemCard({ item, onSelect, badge = item.id, count = item.products.lengt
       whileHover="hover"
       whileTap="tap"
       transition={{ duration: 0.3 }}
-      className={`relative flex w-full items-center gap-3 overflow-hidden rounded-xl border bg-slate-900/70 px-3 text-left backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${hasImage ? 'py-2' : 'py-2.5'}`}
+      className={`relative flex w-full items-center gap-3 overflow-hidden rounded-xl border bg-slate-900/70 px-3 text-left backdrop-blur-sm focus:outline-none focus-visible:ring-2 ${theme.ring} ${hasImage ? 'py-2' : 'py-2.5'}`}
     >
       {hasImage && (
         <span className="relative size-20 shrink-0 overflow-hidden rounded-lg border border-slate-800">

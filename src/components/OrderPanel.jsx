@@ -71,7 +71,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
         }`}
       >
         <header className="flex items-center justify-between border-b border-slate-800 px-4 py-4">
-          <h2 className="text-lg font-semibold text-emerald-400">
+          <h2 className="text-lg font-semibold text-sky-400">
             Objednávka{' '}
             <span className="text-sm font-medium text-slate-400">({total} ks)</span>
           </h2>
@@ -79,7 +79,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
             type="button"
             onClick={closeWithAnimation}
             aria-label="Zavřít"
-            className={`flex size-9 items-center justify-center rounded-lg text-emerald-400 transition duration-300 hover:bg-slate-800 hover:text-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+            className={`flex size-9 items-center justify-center rounded-lg text-sky-400 transition duration-300 hover:bg-slate-800 hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
               closing ? 'scale-90' : ''
             }`}
           >
@@ -139,7 +139,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
                     variants={removeButtonVariants}
                     onClick={() => onQuantityChange(line.code, 0)}
                     aria-label="Odebrat z objednávky"
-                    className="col-start-2 row-start-1 flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 sm:col-auto sm:row-auto"
+                    className="col-start-2 row-start-1 flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 sm:col-auto sm:row-auto"
                   >
                     <motion.svg
                       variants={removeIconVariants}
@@ -181,7 +181,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
           className={`space-y-2 border-t border-slate-800 px-4 py-4 ${open ? 'animate-fade-up' : ''}`}
         >
           {status === 'sent' && (
-            <p className="rounded-lg bg-emerald-500/10 px-3 py-2 text-center text-sm font-medium text-emerald-400">
+            <p className="rounded-lg bg-sky-500/10 px-3 py-2 text-center text-sm font-medium text-sky-400">
               ✓ Objednávka byla odeslána.
             </p>
           )}
@@ -194,7 +194,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
             type="button"
             disabled={lines.length === 0 || status === 'sending'}
             onClick={onSend}
-            className="w-full rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            className="w-full rounded-xl bg-sky-600 py-3 text-sm font-semibold text-white transition hover:bg-sky-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300"
           >
             {status === 'sending' ? 'Odesílám…' : 'Odeslat objednávku'}
           </button>
@@ -202,7 +202,7 @@ function OrderPanel({ open, lines, status, onClose, onQuantityChange, onClear, o
             type="button"
             disabled={lines.length === 0}
             onClick={onClear}
-            className="w-full rounded-xl py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-slate-200 disabled:opacity-40 disabled:hover:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            className="w-full rounded-xl py-2 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-slate-200 disabled:opacity-40 disabled:hover:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
           >
             Vyprázdnit objednávku
           </button>

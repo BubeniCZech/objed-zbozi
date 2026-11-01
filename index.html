@@ -27,13 +27,13 @@
       }
       #splash.hide { opacity: 0; pointer-events: none; }
       #splash svg { width: 5rem; height: 5rem; }
-      #splash rect { fill: #047857; animation: splash-pane 2.4s ease-in-out infinite; }
+      #splash rect { fill: #0369a1; animation: splash-pane 2.4s ease-in-out infinite; }
       #splash p {
         margin: 0;
         font-family: "Fira Code", ui-monospace, monospace;
         font-size: 0.9rem;
         letter-spacing: 0.08em;
-        color: #34d399;
+        color: #38bdf8;
         /* Jméno se po písmenech odkrývá zleva doprava (9 písmen = 9 kroků) až po popisku. */
         animation: splash-type 0.8s steps(9, end) 0.8s both;
       }
@@ -56,11 +56,11 @@
         to { clip-path: inset(0 0 0 0); }
       }
       @keyframes splash-pane {
-        0%, 50%, 100% { fill: #047857; }
-        20% { fill: #6ee7b7; }
+        0%, 50%, 100% { fill: #0369a1; }
+        20% { fill: #7dd3fc; }
       }
       @media (prefers-reduced-motion: reduce) {
-        #splash rect { animation: none; fill: #10b981; }
+        #splash rect { animation: none; fill: #0ea5e9; }
         #splash p, #splash .role { animation: none; }
       }
     </style>

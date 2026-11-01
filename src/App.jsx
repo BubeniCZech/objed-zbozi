@@ -3,6 +3,7 @@ import { AppWindow, DoorOpen, Puzzle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Breadcrumb from './components/Breadcrumb.jsx'
 import Catalogs from './components/Catalogs.jsx'
+import CountUp from './components/CountUp.jsx'
 import ItemCard from './components/ItemCard.jsx'
 import Navbar from './components/Navbar.jsx'
 import OrderPanel from './components/OrderPanel.jsx'
@@ -12,6 +13,7 @@ import Toast from './components/Toast.jsx'
 import { categories } from './data/items.js'
 import { matchesItem } from './utils/search.js'
 import { sendOrder } from './utils/sendOrder.js'
+import { defaultTheme, themes } from './theme.js'
 
 const categoryIcons = { okenni: AppWindow, dverni: DoorOpen, prislusenstvi: Puzzle }
 
@@ -139,6 +141,7 @@ function App() {
     ? categories
     : (category ? category.items : allItems).filter((item) => matchesItem(item, search))
   const heading = category ? category.name : searching ? 'Výsledky hledání' : HOME_TITLE
+  const headingTheme = themes[category?.id] ?? defaultTheme
 
   // Při psaní do hledání se vrátíme na přehled položek, ať jsou vidět výsledky.
   const changeSearch = (value) => {
@@ -231,12 +234,19 @@ function App() {
               <Breadcrumb crumbs={[{ label: HOME_TITLE, onClick: showHome }, { label: category.name }]} />
             )}
             <h2 className="mb-5 flex items-center gap-3 font-display text-2xl font-bold tracking-wide">
-              <span className="h-7 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
-              <span className="bg-linear-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+              <span className={`h-7 w-1 rounded-full ${headingTheme.bar}`} aria-hidden="true" />
+              {/* Nadpis se odkryje zleva doprava a jeho barevný přechod se pomalu přelévá. */}
+              <motion.span
+                key={heading}
+                initial={{ clipPath: 'inset(0 100% 0 0)' }}
+                animate={{ clipPath: 'inset(0 0% 0 0)' }}
+                transition={{ duration: 0.7, ease: 'easeOut' }}
+                className={`animate-shimmer bg-linear-to-r bg-size-[200%_100%] ${headingTheme.gradient} bg-clip-text text-transparent`}
+              >
                 {heading}
-              </span>
-              <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 font-sans text-sm font-semibold text-emerald-400">
-                {entries.length}
+              </motion.span>
+              <span className={`font-sans text-sm font-semibold ${headingTheme.count}`}>
+                [<CountUp value={entries.length} />]
               </span>
             </h2>
             {entries.length === 0 ? (
@@ -259,10 +269,15 @@ function App() {
                           item={entry}
                           badge={<Icon className="size-5" aria-hidden="true" />}
                           count={entry.items.length}
+                          theme={themes[entry.id]}
                           onSelect={openCategory}
                         />
                       ) : (
-                        <ItemCard item={entry} onSelect={(id) => openItem(id, entry.categoryId ?? categoryId)} />
+                        <ItemCard
+                          item={entry}
+                          theme={themes[entry.categoryId ?? categoryId]}
+                          onSelect={(id) => openItem(id, entry.categoryId ?? categoryId)}
+                        />
                       )}
                     </motion.li>
                   )

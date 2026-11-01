@@ -30,7 +30,7 @@ function ParallaxBackground() {
         className="opacity-[0.07]"
         style={{
           backgroundImage:
-            'linear-gradient(to right, #34d399 1px, transparent 1px), linear-gradient(to bottom, #34d399 1px, transparent 1px)',
+            'linear-gradient(to right, #38bdf8 1px, transparent 1px), linear-gradient(to bottom, #38bdf8 1px, transparent 1px)',
           backgroundSize: '56px 56px',
         }}
       />
@@ -40,7 +40,7 @@ function ParallaxBackground() {
         shift={-140 * k}
         style={{
           backgroundImage:
-            'radial-gradient(40rem 40rem at 12% 22%, rgba(16, 185, 129, 0.16), transparent 70%)',
+            'radial-gradient(40rem 40rem at 12% 22%, rgba(14, 165, 233, 0.16), transparent 70%)',
         }}
       />
       {/* nejrychlejší vrstva: záře vpravo dole */}
@@ -49,7 +49,7 @@ function ParallaxBackground() {
         shift={-240 * k}
         style={{
           backgroundImage:
-            'radial-gradient(32rem 32rem at 88% 68%, rgba(5, 150, 105, 0.14), transparent 70%)',
+            'radial-gradient(32rem 32rem at 88% 68%, rgba(2, 132, 199, 0.14), transparent 70%)',
         }}
       />
     </div>

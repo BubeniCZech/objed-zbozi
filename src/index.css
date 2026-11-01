@@ -44,7 +44,7 @@ html {
 
 /* Logo: tabule se postupně rozsvěcují */
 .logo-pane {
-  fill: var(--color-emerald-700);
+  fill: var(--color-sky-700);
   animation: logo-cycle 2.4s ease-in-out infinite;
 }
 
@@ -52,17 +52,17 @@ html {
   0%,
   50%,
   100% {
-    fill: var(--color-emerald-700);
+    fill: var(--color-sky-700);
   }
   20% {
-    fill: var(--color-emerald-300);
+    fill: var(--color-sky-300);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .logo-pane {
     animation: none;
-    fill: var(--color-emerald-500);
+    fill: var(--color-sky-500);
   }
 }
 
@@ -123,5 +123,22 @@ button:not(:disabled),
 @media (prefers-reduced-motion: reduce) {
   .animate-slide-out {
     animation-duration: 0.01s;
+  }
+}
+
+/* Nadpis: přechod barev se pomalu přelévá zleva doprava */
+@theme {
+  --animate-shimmer: shimmer 5s linear infinite;
+
+  @keyframes shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer {
+    animation: none;
   }
 }
