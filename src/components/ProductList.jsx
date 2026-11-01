@@ -1,17 +1,36 @@
 import { AnimatePresence } from 'motion/react'
 import { Info } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import InfoModal from './InfoModal.jsx'
 import { defaultTheme } from '../theme.js'
 import { productSubtitle, productTitle } from '../utils/productTitle.js'
 import QuantityControl from './QuantityControl.jsx'
+
+// Jak dlouho zůstane na tlačítku potvrzení „Přidáno“.
+const ADDED_MS = 1600
 
 const rowGrid = 'grid-cols-[1fr_auto] px-2.5 py-2 sm:px-3'
 
 function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme = defaultTheme }) {
   const groups = [...new Set(item.products.map((p) => p.group))]
   const [infoOpen, setInfoOpen] = useState(false)
+  const [added, setAdded] = useState(false)
   const draftCount = Object.values(draft).reduce((sum, qty) => sum + qty, 0)
+
+  useEffect(() => {
+    if (!added) return
+    const timer = setTimeout(() => setAdded(false), ADDED_MS)
+    return () => clearTimeout(timer)
+  }, [added])
+
+  const confirm = () => {
+    if (draftCount === 0) return
+    onAddToOrder()
+    setAdded(true)
+  }
+
+  // Potvrzení přidání je přímo na tlačítku, bez vyskakovacího okna.
+  const showAdded = added && draftCount === 0
 
   return (
     <div className="animate-fade-up @container">
@@ -79,7 +98,7 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
                         )}
                         {p.code}
                         {ordered[p.code] > 0 && (
-                          <span className={`ml-2 rounded-full px-2 py-0.5 text-xs font-medium ${theme.tag}`}>
+                          <span className={`ml-2 inline-block whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ${theme.tag}`}>
                             v objednávce: {ordered[p.code]}
                           </span>
                         )}
@@ -102,11 +121,13 @@ function ProductList({ item, draft, ordered, onDraftChange, onAddToOrder, theme 
       <div className="sticky bottom-4 flex justify-end">
         <button
           type="button"
-          disabled={draftCount === 0}
-          onClick={onAddToOrder}
+          disabled={draftCount === 0 && !showAdded}
+          onClick={confirm}
           className={`rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-black/40 transition disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 disabled:shadow-none focus:outline-none focus-visible:ring-2 ${theme.confirm}`}
         >
-          {draftCount === 0
+          {showAdded
+            ? '✓ Přidáno'
+            : draftCount === 0
             ? 'Potvrdit'
             : `Potvrdit (${draftCount} ks)`}
         </button>

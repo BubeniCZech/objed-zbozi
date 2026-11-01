@@ -3,7 +3,8 @@ import { productSubtitle, productTitle } from '../utils/productTitle.js'
 
 const AUTO_CLOSE_MS = 3000
 
-// Krátké potvrzení po přidání do objednávky. Zmizí samo po 3 sekundách
+// Krátké potvrzení (přidání do objednávky, odeslání objednávky). `notice.title` je text hlášky,
+// `notice.lines` jsou produkty (nepovinné), `notice.duration` doba zobrazení v ms. Zmizí samo po 3 sekundách
 // nebo po kliknutí kamkoli mimo něj.
 function Toast({ notice, onClose }) {
   const toastRef = useRef(null)
@@ -18,7 +19,7 @@ function Toast({ notice, onClose }) {
   useEffect(() => {
     if (!notice) return
 
-    const timer = setTimeout(() => onCloseRef.current(), AUTO_CLOSE_MS)
+    const timer = setTimeout(() => onCloseRef.current(), notice.duration ?? AUTO_CLOSE_MS)
     const onPointerDown = (e) => {
       if (!toastRef.current?.contains(e.target)) onCloseRef.current()
     }
@@ -41,7 +42,7 @@ function Toast({ notice, onClose }) {
     >
       <div className="flex items-start justify-between gap-3">
         <p className="flex items-center gap-2 text-sm font-semibold text-emerald-400">
-          <span aria-hidden="true">✓</span> Přidáno do objednávky
+          <span aria-hidden="true">✓</span> {notice.title ?? 'Přidáno do objednávky'}
         </p>
         <button
           type="button"
@@ -52,7 +53,8 @@ function Toast({ notice, onClose }) {
           ✕
         </button>
       </div>
-      <ul className="mt-2 space-y-1 text-sm text-slate-300">
+      {notice.lines?.length > 0 && (
+      <ul className="mt-2 max-h-[45vh] space-y-1 overflow-y-auto text-sm text-slate-300">
         {notice.lines.map((line) => (
           <li key={line.code} className="flex justify-between gap-3">
             <span>
@@ -70,6 +72,7 @@ function Toast({ notice, onClose }) {
           </li>
         ))}
       </ul>
+      )}
     </div>
   )
 }

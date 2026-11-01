@@ -221,7 +221,13 @@ function InfoModal({ item, theme, onClose }) {
           {/* Text je mimo přibližovaný obrázek, takže zůstává pořád stejně velký. */}
           {item.infoTexts && (
             <div
-              className={`pointer-events-none absolute flex ${item.infoTall ? 'bottom-[6%] left-[6%] max-w-[55%]' : 'inset-x-0 top-[56%] justify-center px-[6%]'}`}
+              className={`pointer-events-none absolute flex ${
+                item.infoTextArea === 'right'
+                  ? 'right-[6%] top-[22%] w-[58%]'
+                  : item.infoTall
+                    ? 'bottom-[6%] left-[6%] max-w-[55%]'
+                    : 'inset-x-0 top-[56%] justify-center px-[6%]'
+              }`}
             >
               <TypedText
                 texts={item.infoTexts}

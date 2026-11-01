@@ -28,6 +28,9 @@ const productsByCode = Object.fromEntries(
   ),
 )
 
+// Potvrzení odeslané objednávky se seznamem položek zůstane déle, aby se stihlo přečíst.
+const SENT_NOTICE_MS = 6000
+
 const HOME = { cat: null, id: null, order: false }
 
 // Nadpis úvodního přehledu, stejný text je i první úrovní drobečkové navigace.
@@ -166,7 +169,10 @@ function App() {
       // Přes EmailJS odešlo hned, přes mailto: musí uživatel e-mail odeslat sám.
       if (method === 'emailjs') {
         setOrder({})
-        setSendStatus('sent')
+        setSendStatus('idle')
+        // Panel se zavře sám a nahoře naskočí potvrzení se seznamem objednaných položek.
+        closeOrder()
+        setNotice({ id: Date.now(), title: 'Objednávka odeslána', lines: orderLines, duration: SENT_NOTICE_MS })
       } else {
         setSendStatus('idle')
       }
@@ -182,7 +188,6 @@ function App() {
       .map(([code, qty]) => ({ ...productsByCode[code], qty }))
     if (added.length === 0) return
 
-    setNotice({ id: Date.now(), lines: added })
     setOrder((prev) => {
       const next = { ...prev }
       for (const [code, qty] of Object.entries(draft)) {
