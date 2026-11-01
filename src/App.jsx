@@ -27,6 +27,9 @@ const productsByCode = Object.fromEntries(
 
 const HOME = { cat: null, id: null, order: false }
 
+// Nadpis úvodního přehledu, stejný text je i první úrovní drobečkové navigace.
+const HOME_TITLE = 'Sortiment'
+
 function App() {
   const [search, setSearch] = useState('')
   // Po obnovení stránky se otevřená kategorie a položka vrátí z historie prohlížeče.
@@ -132,7 +135,7 @@ function App() {
   const entries = showCategories
     ? categories
     : (category ? category.items : allItems).filter((item) => matchesItem(item, search))
-  const heading = category ? category.name : searching ? 'Výsledky hledání' : 'Kategorie'
+  const heading = category ? category.name : searching ? 'Výsledky hledání' : HOME_TITLE
 
   // Při psaní do hledání se vrátíme na přehled položek, ať jsou vidět výsledky.
   const changeSearch = (value) => {
@@ -206,7 +209,7 @@ function App() {
           <>
             <Breadcrumb
               crumbs={[
-                { label: 'Kategorie', onClick: showHome },
+                { label: HOME_TITLE, onClick: showHome },
                 { label: category.name, onClick: () => openCategory(category.id) },
                 { label: selectedItem.name },
               ]}
@@ -222,7 +225,7 @@ function App() {
         ) : (
           <>
             {category && (
-              <Breadcrumb crumbs={[{ label: 'Kategorie', onClick: showHome }, { label: category.name }]} />
+              <Breadcrumb crumbs={[{ label: HOME_TITLE, onClick: showHome }, { label: category.name }]} />
             )}
             <h2 className="mb-5 flex items-center gap-3 font-display text-2xl font-bold tracking-wide">
               <span className="h-7 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
